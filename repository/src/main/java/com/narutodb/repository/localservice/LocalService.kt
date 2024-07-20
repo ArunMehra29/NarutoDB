@@ -1,12 +1,12 @@
-package com.naruto.narutodb.localservice
+package com.narutodb.repository.localservice
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.naruto.narutodb.model.common.response.CharacterEntity
-import com.naruto.narutodb.model.local.CharacterDao
+import com.narutodb.repository.response.CharacterEntity
+import com.narutodb.repository.local.CharacterDao
 
 @Database(entities = [CharacterEntity::class], version = 1)
 @TypeConverters(Converters::class)

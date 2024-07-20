@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.internal.LinkedTreeMap
 import com.naruto.core.data.Character
 import com.naruto.core.data.InfoSection
-import com.naruto.narutodb.model.common.Result
+import com.naruto.core.data.Result
 import com.naruto.narutodb.datasourcemanager.CharacterDataSourceManager
 import com.naruto.narutodb.util.Logger
 import kotlinx.coroutines.CoroutineExceptionHandler

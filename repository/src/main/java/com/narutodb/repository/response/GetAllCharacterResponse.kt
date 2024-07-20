@@ -1,4 +1,4 @@
-package com.naruto.narutodb.model.common.response
+package com.narutodb.repository.response
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

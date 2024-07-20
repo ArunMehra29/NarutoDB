@@ -35,18 +35,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.naruto.narutodb.model.common.Result
-import com.naruto.narutodb.util.Logger
-import com.google.gson.internal.LinkedTreeMap
 import com.naruto.core.data.Character
-import com.naruto.narutodb.R
 import com.naruto.core.data.InfoSection
+import com.naruto.core.data.Result
+import com.naruto.narutodb.util.Logger
 
 @Composable
 fun CharacterDetailScreen() {
@@ -108,7 +105,7 @@ fun DisplayCharacterDetails(character: Character)
                     .build(),
                 modifier = Modifier.fillMaxSize(),
                 contentDescription = "Profile picture",
-                placeholder = painterResource(id = R.drawable.image_loading_placeholder),
+//                placeholder = painterResource(id = R.drawable.image_loading_placeholder),
                 contentScale = ContentScale.FillBounds
             )
             Row(

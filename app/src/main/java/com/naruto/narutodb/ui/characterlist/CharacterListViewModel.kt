@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.naruto.core.data.Character
 import com.naruto.narutodb.datasourcemanager.CharacterDataSourceManager
-import com.naruto.narutodb.model.common.Result
+import com.naruto.core.data.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

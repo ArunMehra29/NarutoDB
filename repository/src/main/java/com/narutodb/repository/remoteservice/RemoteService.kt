@@ -1,6 +1,6 @@
-package com.naruto.narutodb.remoteservice
+package com.narutodb.repository.remoteservice
 
-import com.naruto.narutodb.model.common.response.GetAllCharacterResponse
+import com.narutodb.repository.response.GetAllCharacterResponse
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -37,9 +37,9 @@ class RemoteService
         @Volatile
         private var instance: RemoteService? = null
 
-        fun getInstance() = instance?: synchronized(this)
+        fun getInstance() = instance ?: synchronized(this)
         {
-            instance?: RemoteService()
+            instance ?: RemoteService()
         }
     }
 

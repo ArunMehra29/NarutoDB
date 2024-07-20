@@ -1,4 +1,4 @@
-package com.naruto.narutodb.model.common
+package com.naruto.core.data
 
 /**
  * A generic class that holds a value with its loading status.

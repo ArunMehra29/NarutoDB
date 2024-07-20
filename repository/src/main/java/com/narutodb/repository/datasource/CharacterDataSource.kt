@@ -1,10 +1,10 @@
-package com.naruto.narutodb.datasource
+package com.narutodb.repository.datasource
 
 import com.naruto.core.data.Character
 import com.naruto.core.repository.ICharacterRepository
-import com.naruto.narutodb.localservice.LocalService
-import com.naruto.narutodb.model.common.response.CharacterEntity
-import com.naruto.narutodb.remoteservice.RemoteService
+import com.narutodb.repository.localservice.LocalService
+import com.narutodb.repository.response.CharacterEntity
+import com.narutodb.repository.remoteservice.RemoteService
 
 class CharacterDataSource(
     private val remoteService: RemoteService = RemoteService.getInstance(),

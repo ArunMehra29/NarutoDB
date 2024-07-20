@@ -55,8 +55,8 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.naruto.narutodb.ui.utils.shimmereffect.ShowShimmerAnimation
 import com.naruto.core.data.Character
+import com.naruto.core.data.Result
 import com.naruto.narutodb.R
-import com.naruto.narutodb.model.common.Result
 import com.naruto.narutodb.util.Logger
 
 @Composable
@@ -146,7 +146,7 @@ fun DisplayCharacterList(
                                     .build(),
                                 modifier = Modifier.height(150.dp),
                                 contentDescription = "Profile picture",
-                                placeholder = painterResource(id = R.drawable.image_loading_placeholder),
+//                                placeholder = painterResource(id = R.drawable.image_loading_placeholder),
                                 contentScale = ContentScale.FillBounds
                             )
                         }

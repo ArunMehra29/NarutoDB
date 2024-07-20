@@ -1,10 +1,10 @@
-package com.naruto.narutodb.model.local
+package com.narutodb.repository.local
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.naruto.narutodb.model.common.response.CharacterEntity
+import com.narutodb.repository.response.CharacterEntity
 
 @Dao
 interface CharacterDao

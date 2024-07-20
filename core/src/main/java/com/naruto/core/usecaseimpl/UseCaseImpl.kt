@@ -1,4 +1,4 @@
-package com.naruto.narutodb
+package com.naruto.core.usecaseimpl
 
 import com.naruto.core.usecase.GetAllCharactersFromLocal
 import com.naruto.core.usecase.GetAllCharactersFromRemote
