@@ -7,7 +7,7 @@ import com.naruto.core.usecase.GetAllCharactersFromRemote
 import com.naruto.core.usecase.GetCharacterById
 import com.naruto.core.usecase.SaveAllCharacters
 import com.naruto.core.usecaseimpl.UseCaseImpl
-import com.narutodb.repository.datasource.CharacterDataSource
+import com.naruto.repository.datasource.CharacterDataSource
 import com.naruto.narutodb.util.Logger
 
 

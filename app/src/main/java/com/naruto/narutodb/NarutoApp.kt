@@ -1,7 +1,7 @@
 package com.naruto.narutodb
 
 import android.app.Application
-import com.narutodb.repository.localservice.LocalService
+import com.naruto.repository.localservice.LocalService
 
 class NarutoApp: Application()
 {
