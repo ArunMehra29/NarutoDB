@@ -1,16 +1,23 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
-    id("com.google.devtools.ksp")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kapt.ksp)
 }
 
 android {
+
+    val compileTargetSdkVersion: Int = libs.versions.compileTargetSdk.get().toInt()
+    val minSdkVersion: Int = libs.versions.minSdk.get().toInt()
+
+
     namespace = "com.narutodb.data"
-    compileSdk = 34
+    compileSdk = compileTargetSdkVersion
 
     defaultConfig {
-        minSdk = 24
-        targetSdk = 34
+        minSdk = minSdkVersion
+        testOptions.targetSdk = compileTargetSdkVersion
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -19,28 +26,32 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_22
+        targetCompatibility = JavaVersion.VERSION_22
     }
-    kotlinOptions {
-        jvmTarget = "21"
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_22)
+        }
     }
 }
 
 dependencies {
 
-    implementation (project(":core"))
+    implementation (project(projectPath = ":core"))
 
     //Calling API dependency
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.square.logging.interceptor)
+    implementation(libs.square.okhttp)
 
-    implementation ("androidx.room:room-runtime:2.6.1")
-    ksp ("androidx.room:room-compiler:2.6.1")
-    implementation ("androidx.room:room-ktx:2.6.1")
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
 
-    testImplementation ("junit:junit:4.13.2")
-    androidTestImplementation ("androidx.test.ext:junit:1.2.1")
-    androidTestImplementation ("androidx.test.espresso:espresso-core:3.6.1")
+    ksp(libs.room.compiler)
+
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
 }

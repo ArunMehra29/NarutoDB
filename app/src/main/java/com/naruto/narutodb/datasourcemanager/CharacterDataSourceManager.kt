@@ -38,19 +38,20 @@ class CharacterDataSourceManager
 
     suspend fun getAllCharacters(): List<Character>?
     {
-        try
-        {
-            val response = getCharactersFromRemote()
-            return response
-        }
-        catch (exception : Exception)
-        {
-            Logger.debug(
-                "fatal",
-                "allCharactersLocalExceptionHandler exception value == ${exception.message}"
-            )
-            return getCharactersFromLocal()
-        }
+        val response = getCharactersFromRemote()
+        return response
+//        try
+//        {
+//
+//        }
+//        catch (exception : Exception)
+//        {
+//            Logger.debug(
+//                "fatal",
+//                "allCharactersLocalExceptionHandler exception value == ${exception.message}"
+//            )
+//            return getCharactersFromLocal()
+//        }
     }
 
     suspend fun saveCharacterListToLocal(characters: List<Character>?)

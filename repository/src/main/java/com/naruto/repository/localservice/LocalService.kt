@@ -9,7 +9,7 @@ import com.naruto.repository.response.CharacterEntity
 import com.naruto.repository.local.CharacterDao
 
 @Database(entities = [CharacterEntity::class], version = 1)
-@TypeConverters(Converters::class)
+@TypeConverters(value = [Converters::class])
 abstract class LocalService: RoomDatabase()
 {
     abstract fun characterDao(): CharacterDao

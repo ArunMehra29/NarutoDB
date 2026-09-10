@@ -1,17 +1,27 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("kotlin-kapt")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kapt.ksp)
+    alias(libs.plugins.dagger.hilt.android)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
+
+    val compileTargetSdkVersion: Int = libs.versions.compileTargetSdk.get().toInt()
+    val minSdkVersion: Int = libs.versions.minSdk.get().toInt()
+
+
     namespace = "com.naruto.narutodb"
-    compileSdk = 34
+    compileSdk = compileTargetSdkVersion
 
     defaultConfig {
         applicationId = "com.naruto.narutodb"
-        minSdk = 24
-        targetSdk = 34
+        minSdk = minSdkVersion
+        targetSdk = compileTargetSdkVersion
         versionCode = 1
         versionName = "1.0"
 
@@ -31,19 +41,18 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_22
+        targetCompatibility = JavaVersion.VERSION_22
     }
-    kotlinOptions {
-        jvmTarget = "21"
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_22)
+        }
     }
     buildFeatures {
         compose = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.14"
-    }
-    packagingOptions {
+    packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
@@ -52,34 +61,38 @@ android {
 
 dependencies {
 
-    implementation (project(":core"))
-    implementation (project(":resources"))
-    implementation (project(":repository"))
+    implementation (project(projectPath = ":core"))
+    implementation (project(projectPath = ":resources"))
+    implementation (project(projectPath = ":repository"))
+    implementation(libs.androidx.compose.material3.window.size.class1)
 
-    implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.0")
-    implementation("androidx.activity:activity-compose:1.9.0")
-    implementation (platform(notation = "androidx.compose:compose-bom:2024.05.00"))
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-graphics")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3")
-    implementation("com.google.code.gson:gson:2.10.1")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.0")
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.activity.compose)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.material3)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
+    implementation(libs.kotlinx.serialization.json)
+    implementation (libs.androidx.foundation)
+    implementation(libs.coil.kt)
+    implementation(libs.coil.okhttp)
+    implementation(libs.androidx.lifecycle.process)
+    implementation(libs.google.gson)
 
-    //Image loading
-    implementation("io.coil-kt:coil-compose:2.1.0")
+    implementation(libs.androidx.compose.material.icons.core)
 
-    implementation("androidx.navigation:navigation-compose:2.7.7")
-    implementation("androidx.compose.animation:animation:1.6.7")
-
-    implementation("androidx.compose.material3:material3-window-size-class:1.1.0")
-
-    testImplementation ("junit:junit:4.13.2")
-    androidTestImplementation ("androidx.test.ext:junit:1.1.3")
-    androidTestImplementation ("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation (platform("androidx.compose:compose-bom:2022.10.00"))
-    androidTestImplementation ("androidx.compose.ui:ui-test-junit4")
-    debugImplementation ("androidx.compose.ui:ui-tooling")
-    debugImplementation ("androidx.compose.ui:ui-test-manifest")
+    //test and debug implementation
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
 }

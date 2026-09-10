@@ -2,7 +2,9 @@ package com.naruto.narutodb
 
 import android.app.Application
 import com.naruto.repository.localservice.LocalService
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 class NarutoApp: Application()
 {
 
@@ -10,6 +12,6 @@ class NarutoApp: Application()
         super.onCreate()
 
         //initialise Database
-        LocalService.invoke(this@NarutoApp)
+        LocalService.invoke(context = this@NarutoApp)
     }
 }

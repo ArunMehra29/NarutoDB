@@ -37,13 +37,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
+import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.naruto.core.data.Character
 import com.naruto.core.data.InfoSection
 import com.naruto.core.data.Result
 import com.naruto.narutodb.util.Logger
+
 
 @Composable
 fun CharacterDetailScreen(viewModel: CharacterViewModel) {
