@@ -18,5 +18,5 @@ dependencyResolutionManagement {
 rootProject.name = "Naruto DB"
 include (":app")
 include (":core")
-include (":repository")
+include (":data")
 include (":resources")

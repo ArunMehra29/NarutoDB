@@ -6,6 +6,7 @@ import android.content.ContextWrapper
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -34,7 +35,9 @@ import com.naruto.narutodb.ui.character.CharacterViewModel
 import com.naruto.narutodb.ui.theme.NarutoDBTheme
 import com.naruto.narutodb.ui.utils.UiNavigationConstants
 import com.naruto.narutodb.util.Logger
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
@@ -55,7 +58,7 @@ class MainActivity : ComponentActivity() {
 
             NarutoDBTheme {
 
-                val viewModel: CharacterViewModel = viewModel()
+                val viewModel: CharacterViewModel by viewModels()
 
                 // A surface container using the 'background' color from the theme
                 Surface(

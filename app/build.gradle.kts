@@ -63,7 +63,7 @@ dependencies {
 
     implementation (project(projectPath = ":core"))
     implementation (project(projectPath = ":resources"))
-    implementation (project(projectPath = ":repository"))
+    implementation(project(":data"))
     implementation(libs.androidx.compose.material3.window.size.class1)
 
     implementation(libs.androidx.core.ktx)

@@ -2,17 +2,11 @@ package com.naruto.core.repository
 
 import com.naruto.core.data.Character
 
-class CharacterRepository(private val characterRepository: ICharacterRepository)
+interface CharacterRepository
 {
 
-    suspend fun getAllCharactersFromRemote() = characterRepository.getAllCharactersFromRemote()
+    suspend fun getAllCharacters(): List<Character>?
 
-    suspend fun getAllCharactersFromLocal() = characterRepository.getAllCharactersFromLocal()
-
-    suspend fun getCharacterById(characterId: Int) =
-        characterRepository.getCharacterById(characterId = characterId)
-
-    suspend fun saveCharacters(characterList: List<Character>) =
-        characterRepository.saveCharacters(characterList = characterList)
+    suspend fun saveCharactersToDB(characterList: List<Character>?)
 
 }

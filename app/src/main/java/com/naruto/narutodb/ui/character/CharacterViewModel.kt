@@ -7,16 +7,20 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.internal.LinkedTreeMap
 import com.naruto.core.data.Character
 import com.naruto.core.data.InfoSection
-import com.naruto.narutodb.datasourcemanager.CharacterDataSourceManager
+import com.naruto.core.data.Result
+import com.naruto.core.usecase.GetCharactersUseCase
 import com.naruto.narutodb.util.Logger
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import com.naruto.core.data.Result
-import kotlin.collections.get
+import javax.inject.Inject
 
-class CharacterViewModel: ViewModel()
+@HiltViewModel
+class CharacterViewModel @Inject constructor(
+    private val getCharactersUseCase: GetCharactersUseCase
+): ViewModel()
 {
 
     var characters: MutableState<Result<List<Character>?>> = mutableStateOf(value = Result.Loading)
@@ -24,6 +28,10 @@ class CharacterViewModel: ViewModel()
     var characterDetail : MutableState<Result<Character>> = mutableStateOf(value = Result.Loading)
 
     private var characterList: List<Character>? = null
+
+    private var isDataFetched = false
+
+    fun isDataFetched() = isDataFetched
 
     fun setSelectedCharacter(character: Character)
     {
@@ -51,15 +59,16 @@ class CharacterViewModel: ViewModel()
             {
                 characters.value = Result.Loading
             }
-            val response = CharacterDataSourceManager.getInstance().getAllCharacters()
+            val response = getCharactersUseCase.invoke()
             response?.let { value ->
                 characterList = value
                 withContext(Dispatchers.Main)
                 {
-                    characters.value = Result.Success(value)
+                    isDataFetched = true
+                    characters.value = Result.Success(data = value)
                 }
                 //saving fetched value to local DB
-                CharacterDataSourceManager.getInstance().saveCharacterListToLocal(response)
+//                CharacterDataSourceManager.getInstance().saveCharacterListToLocal(response)
             } ?: run {
                 withContext(Dispatchers.Main)
                 {
@@ -95,24 +104,6 @@ class CharacterViewModel: ViewModel()
         characterDetail.value = Result.Error(exception = exception)
     }
 
-    private fun getCharacterById(id: Int?)
-    {
-        viewModelScope.launch(Dispatchers.IO + getCharacterByIdExceptionHandler)
-        {
-            val response = CharacterDataSourceManager.getInstance().getCharacterById(id = id)
-            Logger.debug("fatal", "response value == $response")
-            withContext(Dispatchers.Main)
-            {
-                response?.also { value ->
-                    value.infoSections = getCharacterInfo(character = value)
-                    characterDetail.value = Result.Success(value)
-                } ?: run {
-                    val exception = Exception("Unable to fetch character details")
-                    characterDetail.value = Result.Error(exception = exception)
-                }
-            }
-        }
-    }
 
     private fun getCharacterInfo(character: Character): List<InfoSection>
     {
@@ -162,5 +153,9 @@ class CharacterViewModel: ViewModel()
         }
 
         return infoList
+    }
+
+    fun setDataFetched(value: Boolean) {
+        isDataFetched = value
     }
 }

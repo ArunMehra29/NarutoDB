@@ -67,7 +67,10 @@ fun CharacterListScreen(
     characterSelected: () -> Unit
 )
 {
-    LaunchedEffect(key1 = Unit) {
+    Logger.debug(tag = "fatal", message = "recompose fired")
+    if (!viewModel.isDataFetched())
+    {
+        viewModel.setDataFetched(value = true)
         viewModel.getAllCharacters()
     }
     when (val currentState = viewModel.characters.value)
@@ -114,59 +117,65 @@ fun DisplayCharacterList(
 )
 {
     val weight = if (isPhone) 1f else 0.30f
-    Scaffold(topBar = {
-        AutoComplete(
-            characterList = characterList,
-            onCharacterSearched = onCharacterSearched,
-            onSearchCleared = onSearchCleared
-        )
-    },
-        modifier = Modifier.fillMaxHeight().fillMaxWidth(fraction = weight))
-    { padding ->
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(count = 2),
-            modifier = Modifier.padding(paddingValues = padding)
-        ) {
-            items(count = characterList.size) { itemCount ->
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(all = 8.dp),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-                    shape = RoundedCornerShape(size = 4.dp),
-                    onClick =
-                    {
-                        onCharacterSelected(characterList[itemCount])
-                    }
+    Scaffold { paddingValues ->
+        Scaffold(
+            modifier = Modifier
+                .fillMaxHeight()
+                .fillMaxWidth(fraction = weight)
+                .padding(paddingValues = paddingValues),
+            topBar = {
+                AutoComplete(
+                    characterList = characterList,
+                    onCharacterSearched = onCharacterSearched,
+                    onSearchCleared = onSearchCleared
                 )
-                {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        val imageUrl: Any? =
-                            if (!characterList.elementAt(itemCount).images.isNullOrEmpty())
-                                characterList.elementAt(itemCount).images?.get(0)
-                            else
-                                "https://upload.wikimedia.org/wikipedia/commons/2/24/No_image_3x4_50_trans_borderless.svg"
+            })
+        { padding ->
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(count = 2),
+                modifier = Modifier.padding(paddingValues = padding)
+            ) {
+                items(count = characterList.size) { itemCount ->
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(all = 8.dp),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+                        shape = RoundedCornerShape(size = 4.dp),
+                        onClick =
+                            {
+                                onCharacterSelected(characterList[itemCount])
+                            }
+                    )
+                    {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            val imageUrl: Any? =
+                                if (!characterList.elementAt(itemCount).images.isNullOrEmpty())
+                                    characterList.elementAt(itemCount).images?.get(0)
+                                else
+                                    "https://upload.wikimedia.org/wikipedia/commons/2/24/No_image_3x4_50_trans_borderless.svg"
 
-                        if (null != imageUrl)
-                        {
-                            AsyncImage(
-                                model = ImageRequest.Builder(LocalContext.current)
-                                    .data(imageUrl)
-                                    .crossfade(true)
-                                    .build(),
-                                modifier = Modifier.height(150.dp),
-                                contentDescription = "Profile picture",
+                            if (null != imageUrl)
+                            {
+                                AsyncImage(
+                                    model = ImageRequest.Builder(LocalContext.current)
+                                        .data(imageUrl)
+                                        .crossfade(true)
+                                        .build(),
+                                    modifier = Modifier.height(150.dp),
+                                    contentDescription = "Profile picture",
 //                                placeholder = painterResource(id = R.drawable.image_loading_placeholder),
-                                contentScale = ContentScale.FillBounds
+                                    contentScale = ContentScale.FillBounds
+                                )
+                            }
+                            Text(
+                                text = "  ${characterList.elementAt(itemCount).name}",
+                                modifier = Modifier.padding(top = 8.dp, bottom = 8.dp),
+                                style = MaterialTheme.typography.titleMedium,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
                             )
                         }
-                        Text(
-                            text = "  ${characterList.elementAt(itemCount).name}",
-                            modifier = Modifier.padding(top = 8.dp, bottom = 8.dp),
-                            style = MaterialTheme.typography.titleMedium,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
                     }
                 }
             }
@@ -182,7 +191,7 @@ fun AutoComplete(
     onSearchCleared: () -> Unit
 ) {
 
-    var searchedText by remember { mutableStateOf("") }
+    var searchedText by remember { mutableStateOf(value = "") }
 
     val heightTextFields by remember {
         mutableStateOf(55.dp)
