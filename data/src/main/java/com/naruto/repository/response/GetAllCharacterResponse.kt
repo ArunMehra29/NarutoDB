@@ -9,75 +9,75 @@ import com.naruto.core.data.Family
 import com.naruto.core.data.VoiceActors
 
 data class DebutEntity (
-    @SerializedName("novel") var novel: String? = null,
-    @SerializedName("movie") var movie: String? = null,
-    @SerializedName("appearsIn") var appearsIn: String? = null
+    @SerializedName(value = "novel") var novel: String? = null,
+    @SerializedName(value = "movie") var movie: String? = null,
+    @SerializedName(value = "appearsIn") var appearsIn: String? = null
 )
 
 data class FamilyEntity(
-    @SerializedName("father") var father: String? = null,
-    @SerializedName("mother") var mother: String? = null,
-    @SerializedName("son") var son: String? = null,
-    @SerializedName("daughter") var daughter: String? = null,
-    @SerializedName("wife") var wife: String? = null,
-    @SerializedName("adoptive son") var adoptiveSon: String? = null,
-    @SerializedName("godfather") var godfather: String? = null
+    @SerializedName(value = "father") var father: String? = null,
+    @SerializedName(value = "mother") var mother: String? = null,
+    @SerializedName(value = "son") var son: String? = null,
+    @SerializedName(value = "daughter") var daughter: String? = null,
+    @SerializedName(value = "wife") var wife: String? = null,
+    @SerializedName(value = "adoptive son") var adoptiveSon: String? = null,
+    @SerializedName(value = "godfather") var godfather: String? = null
 )
 
 data class VoiceActorsEntity(
-    @SerializedName("japanese") var japanese: Any? = null,
-    @SerializedName("english") var english: Any? = null
+    @SerializedName(value = "japanese") var japanese: Any? = null,
+    @SerializedName(value = "english") var english: Any? = null
 )
 
 data class GetAllCharacterResponse(
 
-    @SerializedName("characters")
+    @SerializedName(value = "characters")
     var characters: List<CharacterEntity>? = null,
 
-    @SerializedName("currentPage")
+    @SerializedName(value = "currentPage")
     var currentPage: String? = null,
 
-    @SerializedName("pageSize")
+    @SerializedName(value = "pageSize")
     var pageSize: String? = null,
 
-    @SerializedName("totalCharacters")
+    @SerializedName(value = "totalCharacters")
     var totalCharacters: Int? = null
 )
 
 @Entity(tableName = "character")
 data class CharacterEntity (
     @PrimaryKey(autoGenerate = false)
-    @SerializedName("id")
+    @SerializedName(value = "id")
     var id: Int? = null,
 
-    @SerializedName("name")
+    @SerializedName(value = "name")
     var name: String? = null,
 
-    @SerializedName("images")
+    @SerializedName(value = "images")
     var images: List<String>? = null,
 
-    @SerializedName("debut")
+    @SerializedName(value = "debut")
     var debutEntity: DebutEntity? = null,
 
-    @SerializedName("family")
+    @SerializedName(value = "family")
     var familyEntity: FamilyEntity? = null,
 
-    @SerializedName("jutsu")
+    @SerializedName(value = "jutsu")
     var jutsu: List<String>? = null,
 
-    @SerializedName("natureType")
+    @SerializedName(value = "natureType")
     var natureType: List<String>? = null,
 
-    @SerializedName("personal")
+    @SerializedName(value = "personal")
     var personal: Any? = null,
 
-    @SerializedName("rank")
+    @SerializedName(value = "rank")
     var rank: Any? = null,
 
-    @SerializedName("tools")
+    @SerializedName(value = "tools")
     var tools: List<String>? = null,
 
-    @SerializedName("voiceActors")
+    @SerializedName(value = "voiceActors")
     var voiceActorsEntity: VoiceActorsEntity? = null
 
 )

@@ -4,9 +4,5 @@ import com.naruto.core.data.Character
 
 interface CharacterRepository
 {
-
     suspend fun getAllCharacters(): List<Character>?
-
-    suspend fun saveCharactersToDB(characterList: List<Character>?)
-
 }

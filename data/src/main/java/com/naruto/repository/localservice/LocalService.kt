@@ -7,30 +7,43 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.naruto.repository.response.CharacterEntity
 import com.naruto.repository.local.CharacterDao
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Database(entities = [CharacterEntity::class], version = 1)
 @TypeConverters(value = [Converters::class])
 abstract class LocalService: RoomDatabase()
 {
     abstract fun characterDao(): CharacterDao
+}
 
-    companion object {
-        @Volatile
-        private var instance: LocalService? = null
-        private val LOCK = Any()
+@Module
+@InstallIn(value = [SingletonComponent::class])
+object DatabaseModule
+{
 
-        operator fun invoke(context: Context) = instance ?: synchronized(LOCK) {
-            instance ?: buildDatabase(context).also {
-                instance = it
-            }
-        }
+    @Provides
+    @Singleton
+    fun provideAppDatabase(
+        @ApplicationContext context: Context
+    ): LocalService {
 
-        fun getInstance() = instance
-
-        private fun buildDatabase(context: Context) = Room.databaseBuilder(
-            context.applicationContext,
+        return Room.databaseBuilder(
+            context,
             LocalService::class.java,
             "naruto_db"
         ).build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideCharacterDao(
+        database: LocalService
+    ): CharacterDao {
+        return database.characterDao()
     }
 }

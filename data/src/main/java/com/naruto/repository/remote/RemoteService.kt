@@ -1,4 +1,4 @@
-package com.naruto.repository.di
+package com.naruto.repository.remote
 
 import com.naruto.repository.response.GetAllCharacterResponse
 import dagger.Module
