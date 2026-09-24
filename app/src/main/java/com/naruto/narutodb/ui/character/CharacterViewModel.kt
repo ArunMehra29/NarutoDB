@@ -9,9 +9,7 @@ import com.naruto.core.data.Character
 import com.naruto.core.data.InfoSection
 import com.naruto.core.data.Result
 import com.naruto.core.usecase.GetCharactersUseCase
-import com.naruto.narutodb.util.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -25,7 +23,7 @@ class CharacterViewModel @Inject constructor(
 
     var characters: MutableState<Result<List<Character>?>> = mutableStateOf(value = Result.Loading)
 
-    var characterDetail : MutableState<Result<Character>> = mutableStateOf(value = Result.Loading)
+    private var selectedCharacter : Character? = null
 
     private var characterList: List<Character>? = null
 
@@ -36,19 +34,18 @@ class CharacterViewModel @Inject constructor(
     fun setSelectedCharacter(character: Character)
     {
         character.infoSections = getCharacterInfo(character = character)
-        characterDetail.value = Result.Success(data = character)
+        selectedCharacter = character
+    }
+
+    fun getSelectedCharacter(): Character?
+    {
+        return selectedCharacter
     }
 
     private fun displayError(message: String?)
     {
         val exception = Exception(message)
         characters.value = Result.Error(exception = exception)
-    }
-
-    private var getCharacterByIdExceptionHandler:
-            CoroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        Logger.debug("fatal", "getCharacterByIdExceptionHandler exception value == ${throwable.message}")
-        displayCharacterDetailError(throwable.message)
     }
 
     fun getAllCharacters()
@@ -67,8 +64,6 @@ class CharacterViewModel @Inject constructor(
                     isDataFetched = true
                     characters.value = Result.Success(data = value)
                 }
-                //saving fetched value to local DB
-//                CharacterDataSourceManager.getInstance().saveCharacterListToLocal(response)
             } ?: run {
                 withContext(Dispatchers.Main)
                 {
@@ -98,12 +93,13 @@ class CharacterViewModel @Inject constructor(
         }
     }
 
-    private fun displayCharacterDetailError(message: String?)
+    fun textSearch(text: String)
     {
-        val exception = Exception(message)
-        characterDetail.value = Result.Error(exception = exception)
+        val list = characterList?.filter { data ->
+            data.name?.lowercase()?.contains(text.lowercase(), ignoreCase = true) == true
+        }
+        characters.value = Result.Success(data = list)
     }
-
 
     private fun getCharacterInfo(character: Character): List<InfoSection>
     {

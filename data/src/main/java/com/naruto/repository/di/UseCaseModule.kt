@@ -15,7 +15,7 @@ object UseCaseModule
     @Provides
     @Singleton
     fun provideGetCharactersUseCase(
-        repository: CharacterRepository // Hilt fetches this from RepositoryModule
+        repository: CharacterRepository
     ): GetCharactersUseCase {
         return GetCharactersUseCase(characterRepository = repository) // Manual instantiation
     }

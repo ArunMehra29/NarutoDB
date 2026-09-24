@@ -30,10 +30,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -58,16 +56,14 @@ import coil3.request.crossfade
 import com.naruto.narutodb.ui.utils.shimmereffect.ShowShimmerAnimation
 import com.naruto.core.data.Character
 import com.naruto.core.data.Result
-import com.naruto.narutodb.util.Logger
 
 @Composable
 fun CharacterListScreen(
-    isPhone: Boolean = true,
+    characterListScreenWeight: Float,
     viewModel: CharacterViewModel,
-    characterSelected: () -> Unit
+    characterSelected: () -> Unit,
 )
 {
-    Logger.debug(tag = "fatal", message = "recompose fired")
     if (!viewModel.isDataFetched())
     {
         viewModel.setDataFetched(value = true)
@@ -81,14 +77,12 @@ fun CharacterListScreen(
         }
         Result.Loading ->
         {
-            Logger.debug("fatal", "loading called")
             ShowShimmerAnimation(repeatTimes = 10, size = 100.dp)
         }
         is Result.Success ->
         {
-            Logger.debug("fatal", "state value called == ${currentState.data?.size}")
             DisplayCharacterList(
-                isPhone = isPhone,
+                characterListScreenWeight = characterListScreenWeight,
                 characterList = currentState.data ?: arrayListOf(),
                 onCharacterSearched =
                 { characterId ->
@@ -102,7 +96,9 @@ fun CharacterListScreen(
                 { character ->
                     viewModel.setSelectedCharacter(character = character)
                     characterSelected()
-                })
+                },
+                viewModel = viewModel
+            )
         }
     }
 }
@@ -113,21 +109,22 @@ fun DisplayCharacterList(
     onCharacterSearched: (id: Int?) -> Unit,
     onSearchCleared: () -> Unit,
     onCharacterSelected: (character: Character) -> Unit,
-    isPhone: Boolean
+    characterListScreenWeight: Float,
+    viewModel: CharacterViewModel
 )
 {
-    val weight = if (isPhone) 1f else 0.30f
     Scaffold { paddingValues ->
         Scaffold(
             modifier = Modifier
                 .fillMaxHeight()
-                .fillMaxWidth(fraction = weight)
+                .fillMaxWidth(fraction = characterListScreenWeight)
                 .padding(paddingValues = paddingValues),
             topBar = {
                 AutoComplete(
                     characterList = characterList,
                     onCharacterSearched = onCharacterSearched,
-                    onSearchCleared = onSearchCleared
+                    onSearchCleared = onSearchCleared,
+                    viewModel = viewModel
                 )
             })
         { padding ->
@@ -164,7 +161,6 @@ fun DisplayCharacterList(
                                         .build(),
                                     modifier = Modifier.height(150.dp),
                                     contentDescription = "Profile picture",
-//                                placeholder = painterResource(id = R.drawable.image_loading_placeholder),
                                     contentScale = ContentScale.FillBounds
                                 )
                             }
@@ -188,27 +184,28 @@ fun DisplayCharacterList(
 fun AutoComplete(
     characterList: List<Character>,
     onCharacterSearched: (id: Int?) -> Unit,
-    onSearchCleared: () -> Unit
+    onSearchCleared: () -> Unit,
+    viewModel: CharacterViewModel
 ) {
 
     var searchedText by remember { mutableStateOf(value = "") }
 
     val heightTextFields by remember {
-        mutableStateOf(55.dp)
+        mutableStateOf(value = 55.dp)
     }
 
     var textFieldSize by remember {
-        mutableStateOf(Size.Zero)
+        mutableStateOf(value = Size.Zero)
     }
 
     var expanded by remember {
-        mutableStateOf(false)
+        mutableStateOf(value = false)
     }
 
     // Category Field
     Column(
         modifier = Modifier
-            .padding(8.dp)
+            .padding(all = 8.dp)
             .fillMaxWidth()
             .clickable(onClick = {
                 expanded = false
@@ -228,7 +225,9 @@ fun AutoComplete(
                         .fillMaxWidth()
                         .height(heightTextFields)
                         .border(
-                            width = 1.8.dp, color = Color.Black, shape = RoundedCornerShape(15.dp)
+                            width = 1.8.dp,
+                            color = Color.Black,
+                            shape = RoundedCornerShape(size = 15.dp)
                         )
                         .onGloballyPositioned { coordinates ->
                             textFieldSize = coordinates.size.toSize()
@@ -289,7 +288,7 @@ fun AutoComplete(
                     modifier = Modifier
                         .padding(horizontal = 5.dp)
                         .width(textFieldSize.width.dp),
-                    shape = RoundedCornerShape(10.dp)
+                    shape = RoundedCornerShape(size = 10.dp)
                 ) {
 
                     LazyColumn(
@@ -313,12 +312,11 @@ fun AutoComplete(
                                     onCharacterSearched(id)
                                 }
                             }
+                            viewModel.textSearch(text = searchedText)
                         }
                         else
                         {
-                            items(
-                                characterList
-                            ) {character ->
+                            items(characterList) { character ->
                                 ItemsCategory(
                                     title = character.name ?: "",
                                     id = character.id ?: 0
@@ -352,7 +350,7 @@ fun ItemsCategory(
             .clickable {
                 onSelect(title, id)
             }
-            .padding(10.dp)
+            .padding(all = 10.dp)
     ) {
         Text(text = title, fontSize = 16.sp)
     }

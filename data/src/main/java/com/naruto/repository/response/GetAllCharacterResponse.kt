@@ -82,69 +82,6 @@ data class CharacterEntity (
 
 )
 {
-    companion object
-    {
-
-        fun fromCharacterList(characterList: List<Character>): List<CharacterEntity>
-        {
-            val list = arrayListOf<CharacterEntity>()
-            characterList.forEach { character: Character ->
-                val characterEntity = fromCharacter(character = character)
-                list.add(characterEntity)
-            }
-            return list
-        }
-
-        private fun fromCharacter(character: Character): CharacterEntity
-        {
-            val debut = getDebut(debut = character.debut)
-            val family = getFamily(family = character.family)
-            val voiceActors = getVoiceActors(voiceActors = character.voiceActors)
-            return CharacterEntity(
-                id = character.id,
-                name = character.name,
-                images = character.images,
-                debutEntity = debut,
-                voiceActorsEntity = voiceActors,
-                personal = character.personal,
-                rank = character.rank,
-                tools = character.tools,
-                jutsu = character.jutsu,
-                natureType = character.natureType,
-                familyEntity = family
-            )
-        }
-
-        private fun getVoiceActors(voiceActors: VoiceActors?): VoiceActorsEntity
-        {
-            return VoiceActorsEntity(
-                japanese = voiceActors?.japanese,
-                english = voiceActors?.english
-            )
-        }
-
-        private fun getFamily(family: Family?): FamilyEntity
-        {
-            return FamilyEntity(
-                father = family?.father,
-                mother = family?.mother,
-                son = family?.son,
-                daughter = family?.daughter,
-                wife = family?.wife,
-                adoptiveSon = family?.adoptiveSon,
-                godfather = family?.godfather
-            )
-        }
-
-        private fun getDebut(debut: Debut?): DebutEntity
-        {
-            return DebutEntity(
-                novel = debut?.novel,
-                movie = debut?.movie,
-                appearsIn = debut?.appearsIn
-            )
-        }
-    }
 
     fun toCharacter(): Character
     {

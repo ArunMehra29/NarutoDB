@@ -46,6 +46,6 @@ object RemoteService
 
 interface CharacterDbApi
 {
-    @GET("/characters")
+    @GET(value = "/characters")
     suspend fun getALlCharacters(@Query(value = "limit") limit: Int = 1431): GetAllCharacterResponse
 }

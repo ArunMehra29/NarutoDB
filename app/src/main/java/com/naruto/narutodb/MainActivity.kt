@@ -24,17 +24,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.naruto.narutodb.ui.character.CharacterDetailScreen
 import com.naruto.narutodb.ui.character.CharacterListScreen
 import com.naruto.narutodb.ui.character.CharacterViewModel
 import com.naruto.narutodb.ui.theme.NarutoDBTheme
 import com.naruto.narutodb.ui.utils.UiNavigationConstants
-import com.naruto.narutodb.util.Logger
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -44,17 +41,13 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Logger.debug("fatal", "on create called")
         setContent {
-            Logger.debug("fatal", "set content called again")
 
             val context = LocalContext.current
             val activity = context.findActivity()
             val sizeClass = activity?.let { calculateWindowSizeClass(activity = it) }
-//
-            Logger.debug(tag = "fatal", "size class value == $sizeClass")
-//
             val isPhone = sizeClass?.widthSizeClass == WindowWidthSizeClass.Compact
+            val characterListScreenWeight = if (isPhone) 1f else 0.30f
 
             NarutoDBTheme {
 
@@ -67,9 +60,15 @@ class MainActivity : ComponentActivity() {
                 )
                 {
                     if (isPhone) {
-                        PhoneNavigation(isPhone = isPhone, viewModel = viewModel)
+                        PhoneNavigation(
+                            viewModel = viewModel,
+                            characterListScreenWeight = characterListScreenWeight
+                        )
                     } else {
-                        TabletNavigation(isPhone = isPhone, viewModel = viewModel)
+                        TabletNavigation(
+                            viewModel = viewModel,
+                            characterListScreenWeight = characterListScreenWeight
+                        )
                     }
                 }
             }
@@ -78,30 +77,37 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun TabletNavigation(isPhone: Boolean, viewModel: CharacterViewModel) {
+fun TabletNavigation(viewModel: CharacterViewModel, characterListScreenWeight: Float) {
     Row(
         modifier = Modifier.fillMaxSize()
     ) {
-        CharacterListScreen(isPhone = isPhone, viewModel = viewModel) {
+        CharacterListScreen(
+            characterListScreenWeight = characterListScreenWeight,
+            viewModel = viewModel
+        ) {
             //we do nothing here
         }
 
-        Spacer(modifier = Modifier
-            .fillMaxHeight()
-            .width(width = 2.dp))
+        Spacer(
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(width = 2.dp)
+        )
 
         VerticalDivider()
 
-        Spacer(modifier = Modifier
-            .fillMaxHeight()
-            .width(width = 2.dp))
+        Spacer(
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(width = 2.dp)
+        )
 
         CharacterDetailScreen(viewModel = viewModel)
     }
 }
 
 @Composable
-fun PhoneNavigation(isPhone: Boolean, viewModel: CharacterViewModel) {
+fun PhoneNavigation(viewModel: CharacterViewModel, characterListScreenWeight: Float) {
     val navController = rememberNavController()
 
     NavHost(
@@ -112,7 +118,7 @@ fun PhoneNavigation(isPhone: Boolean, viewModel: CharacterViewModel) {
                 composable(route = UiNavigationConstants.CHARACTER_LIST_SCREEN)
                 {
                     CharacterListScreen(
-                        isPhone = isPhone,
+                        characterListScreenWeight = characterListScreenWeight,
                         viewModel = viewModel,
                         characterSelected = {
                             navController.navigate(route = UiNavigationConstants.CHARACTER_DETAIL_SCREEN)
@@ -141,6 +147,6 @@ fun Context.findActivity(): Activity? {
 @Composable
 fun GreetingPreview() {
     NarutoDBTheme {
-        PhoneNavigation(isPhone = true, viewModel = viewModel())
+        PhoneNavigation(viewModel = viewModel(), characterListScreenWeight = 1.0f)
     }
 }

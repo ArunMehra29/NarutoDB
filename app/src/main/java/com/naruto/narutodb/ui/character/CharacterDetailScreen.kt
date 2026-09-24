@@ -49,34 +49,20 @@ import com.naruto.narutodb.util.Logger
 @Composable
 fun CharacterDetailScreen(viewModel: CharacterViewModel) {
 
-    when (val state = viewModel.characterDetail.value)
-    {
-        is Result.Error ->
+    val character = viewModel.getSelectedCharacter()
+    Scaffold()
+    { padding ->
+        Card(
+            modifier = Modifier.padding(paddingValues = padding)
+        )
         {
-
-        }
-        Result.Loading ->
-        {
-
-        }
-        is Result.Success ->
-        {
-            val character = state.data
-            Scaffold()
-            { padding ->
-                Card(
-                    modifier = Modifier.padding(paddingValues = padding)
-                )
-                {
-                    DisplayCharacterDetails(character = character)
-                }
-            }
+            DisplayCharacterDetails(character = character)
         }
     }
 }
 
 @Composable
-fun DisplayCharacterDetails(character: Character)
+fun DisplayCharacterDetails(character: Character?)
 {
     Column(
         modifier = Modifier
@@ -87,10 +73,10 @@ fun DisplayCharacterDetails(character: Character)
 
         var imageIndex by remember { mutableIntStateOf(value = 0) }
         val startingIndex = 0
-        val endingIndex = (character.images?.size ?: 0) - 1
+        val endingIndex = (character?.images?.size ?: 0) - 1
 
         val imageUrl: Any? =
-            if (!character.images.isNullOrEmpty()
+            if (!character?.images.isNullOrEmpty()
                 && (character.images?.size ?: 0) > imageIndex)
                 character.images?.get(imageIndex)
             else
@@ -105,7 +91,6 @@ fun DisplayCharacterDetails(character: Character)
                     .build(),
                 modifier = Modifier.fillMaxSize(),
                 contentDescription = "Profile picture",
-//                placeholder = painterResource(id = R.drawable.image_loading_placeholder),
                 contentScale = ContentScale.FillBounds
             )
             Row(
@@ -119,7 +104,6 @@ fun DisplayCharacterDetails(character: Character)
                         modifier = Modifier
                             .padding(8.dp)
                             .clickable {
-                                Logger.debug("fatal", "left button clicked")
                                 imageIndex--
                             },
                         imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
@@ -133,7 +117,6 @@ fun DisplayCharacterDetails(character: Character)
                         modifier = Modifier
                             .padding(8.dp)
                             .clickable {
-                                Logger.debug("fatal", "right button clicked")
                                 imageIndex++
                             },
                         imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
@@ -145,17 +128,15 @@ fun DisplayCharacterDetails(character: Character)
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        character.name?.let { name ->
-            Text(
-                text = name,
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold
-            )
-        }
+        Text(
+            text = character?.name.orEmpty(),
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        character.infoSections?.forEach { item ->
+        character?.infoSections?.forEach { item ->
             ExpandableInfoSection(infoSection = item)
         }
     }
